@@ -1,50 +1,55 @@
-# 🚗 Getaround – Projet d’Analyse des Retards & API de Pricing
+````markdown
+# 🚗 Getaround – Analyse des Retards & API de Pricing
 
 ## 📌 Présentation du projet
 
-Ce projet combine analyse métier et déploiement d’un modèle de machine learning dans une architecture proche d’un environnement de production.
+Ce projet combine une analyse métier des retards de location et le déploiement d’un modèle de Machine Learning via une API FastAPI. Il reproduit une architecture proche d’un environnement de production avec validation stricte des entrées, contrôle explicite du schéma des features et déploiement conteneurisé via Docker.
 
-Il se compose de deux parties principales :
-
-- 📊 **Dashboard interactif** – analyse des retards de location et de leur impact business  
-- 🚀 **API de prédiction de prix** – estimation du prix journalier d’un véhicule à partir de ses caractéristiques  
-
-L’objectif est d’aider à la prise de décision opérationnelle et d’automatiser la stratégie de pricing via un modèle déployé.
+Le projet se compose de deux parties complémentaires : un dashboard interactif d’analyse des retards et une API de prédiction du prix journalier des véhicules. L’objectif est double : analyser l’impact des retards sur le fonctionnement opérationnel et automatiser la stratégie de pricing à l’aide d’un modèle supervisé.
 
 ---
 
-## 📊 Dashboard en ligne
+## 📊 Dashboard – Analyse des Retards
 
-Dashboard interactif développé avec **Streamlit**.
+Dashboard développé avec Streamlit.
 
-🔗 **Version en ligne :**  
+Version en ligne :  
 https://huggingface.co/spaces/Anabeldg/getaround-delay-dashboard
 
-### ✨ Fonctionnalités
+### 🎯 Objectif métier
 
-- Exploration des distributions de retards  
-- Analyse de différents seuils de retard (60 / 120 / 180 minutes)  
-- Interprétation de l’impact business  
-- Visualisations interactives avec **pandas** et **Altair**
+L’introduction d’un buffer minimum entre deux locations permet de réduire les conflits liés aux retards et les frictions entre utilisateurs. Cependant, augmenter ce buffer peut également diminuer le taux d’utilisation des véhicules. Le dashboard permet d’explorer la distribution des retards, de simuler différents seuils (60 / 120 / 180 minutes) et d’analyser le trade-off entre fiabilité opérationnelle et volume d’activité.
+
+Technologies utilisées : pandas, Altair, Streamlit.
 
 ---
 
-## 🚀 API de prédiction des prix
+## 🚀 API de Prédiction des Prix
 
-API développée avec **FastAPI** et déployée sur **Hugging Face Spaces**.
+API développée avec FastAPI et déployée sur Hugging Face Spaces (Docker).
 
-🔗 **API en ligne :**  
+API en ligne :  
 https://huggingface.co/spaces/Anabeldg/getaround-pricing-api
 
-### 📡 Endpoints disponibles
+---
 
-#### `GET /`
-Page d’accueil présentant l’API.
+## 📡 Documentation de l’API
 
-#### `GET /health`
+La configuration FastAPI par défaut est volontairement modifiée : Swagger (/docs) et ReDoc sont désactivés. Une documentation personnalisée est disponible via l’endpoint GET /docs. Cette page décrit explicitement le format attendu, l’ordre strict des features (FEATURE_ORDER) et les contraintes de validation.
+
+---
+
+## 📡 Endpoints disponibles
+
+### GET /
+
+Page d’accueil HTML listant les endpoints disponibles.
+
+### GET /health
+
 Endpoint de vérification de l’état du service.
 
-Exemple de réponse :
+Réponse :
 
 ```json
 {
@@ -52,10 +57,34 @@ Exemple de réponse :
 }
 ```
 
-#### `POST /predict`
-Prédiction du prix journalier d’un véhicule.
+Permet de vérifier que le service est actif et que le modèle est correctement chargé.
 
-### 📥 Exemple de requête
+### POST /predict
+
+Prédit le rental_price_per_day. L’API accepte deux formats d’entrée.
+
+#### Format principal (requis pour l’évaluation)
+
+Format matriciel :
+
+```json
+{
+  "input": [
+    ["Citroën", 100000, 110, "diesel", "black", "sedan", true, true, true, false, true, true, false]
+  ]
+}
+```
+
+Contraintes :
+- Chaque ligne doit contenir exactement N features.
+- L’ordre doit correspondre strictement à FEATURE_ORDER.
+- Toute erreur de dimension entraîne une réponse HTTP 422.
+
+Ce format est strict et aligné avec une logique de pipeline ML en production.
+
+#### Format secondaire (compatibilité)
+
+Format dictionnaire :
 
 ```json
 {
@@ -79,7 +108,11 @@ Prédiction du prix journalier d’un véhicule.
 }
 ```
 
-### 📤 Exemple de réponse
+Contraintes :
+- Toutes les colonnes requises doivent être présentes.
+- Les colonnes sont automatiquement réordonnées selon FEATURE_ORDER.
+
+#### Réponse de l’API
 
 ```json
 {
@@ -87,30 +120,34 @@ Prédiction du prix journalier d’un véhicule.
 }
 ```
 
+Une valeur prédite par ligne d’entrée (type float).
+
 ---
 
-## 🧠 Modèle
+## 🧠 Modèle de Machine Learning
 
-- Algorithme : **Random Forest Regressor**  
-- Prétraitement : **ColumnTransformer + OneHotEncoder**  
-- Sauvegarde du modèle : `joblib`  
-- Version de `scikit-learn` fixée pour assurer la reproductibilité  
+Algorithme : Random Forest Regressor  
+Prétraitement : ColumnTransformer + OneHotEncoder  
+Sérialisation : joblib  
+Chargement du modèle au démarrage du service afin de minimiser la latence.
 
 ---
 
 ## 🏗 Structure du projet
 
-```text
+```
 getaround-project/
 │
 ├── dashboard/
 │   ├── app.py
+│   ├── get_around_delay_analysis.csv
 │   ├── requirements.txt
 │   └── Dockerfile
 │
 ├── pricing_api/
 │   ├── main.py
 │   ├── pricing_model.joblib
+│   ├── feature_order.json
 │   ├── requirements.txt
 │   └── Dockerfile
 │
@@ -121,14 +158,7 @@ getaround-project/
 
 ## 💻 Lancement en local
 
-### 1️⃣ Cloner le repository
-
-```bash
-git clone https://github.com/madamanastasia/getaround-project.git
-cd getaround-project
-```
-
-### 2️⃣ Lancer l’API localement
+### Lancer l’API
 
 ```bash
 cd pricing_api
@@ -136,10 +166,13 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-API accessible à :  
+API disponible sur :  
 http://127.0.0.1:8000
 
-### 3️⃣ Lancer le dashboard localement
+Documentation personnalisée :  
+http://127.0.0.1:8000/docs
+
+### Lancer le dashboard
 
 ```bash
 cd dashboard
@@ -147,43 +180,19 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Dashboard accessible à :  
-http://localhost:8501
+---
+
+## 🐳 Déploiement
+
+Les deux composants sont déployés via Docker sur Hugging Face Spaces. Cette architecture garantit la reproductibilité, l’isolation des dépendances, la cohérence entre environnement local et production, ainsi qu’une séparation claire entre analyse et service ML.
 
 ---
 
-## ⚙️ Déploiement
+## 📈 Compétences mobilisées
 
-Les deux composants sont déployés via **Docker sur Hugging Face Spaces** :
+Analyse de données, modélisation Machine Learning, validation de schéma, conception d’API REST, conteneurisation Docker et déploiement cloud.
+````
 
-- 📊 Dashboard → Space Docker Streamlit  
-- 🚀 API → Space Docker FastAPI + Uvicorn  
-
-Cette architecture garantit :
-
-- Reproductibilité  
-- Gestion des dépendances  
-- Isolation de l’environnement  
-- Approche proche d’un contexte de production  
-
----
-
-## 📈 Contexte métier
-
-Le projet répond à deux problématiques principales :
-
-1. Déterminer un seuil optimal de retard pour minimiser les conflits opérationnels.  
-2. Automatiser la stratégie de pricing à l’aide d’un modèle de machine learning.  
-
-Compétences mobilisées :
-
-- Analyse de données  
-- Modélisation machine learning  
-- Conception d’API  
-- Conteneurisation (Docker)  
-- Déploiement cloud  
-
----
 
 ## 👤 Auteur
 
