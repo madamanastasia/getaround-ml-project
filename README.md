@@ -1,60 +1,63 @@
-# Getaround – Pricing & Delay Analysis Project
+# 🚗 Getaround – Projet d’Analyse des Retards & API de Pricing
 
-## Project Overview
+## 📌 Présentation du projet
 
-This project combines business analysis and machine learning deployment into a production-ready architecture.
+Ce projet combine analyse métier et déploiement d’un modèle de machine learning dans une architecture proche d’un environnement de production.
 
-It consists of two main components:
+Il se compose de deux parties principales :
 
-- Interactive Dashboard – analysis of rental delays and business impact.
-- Machine Learning Pricing API – prediction of daily rental price based on car characteristics.
+- 📊 **Dashboard interactif** – analyse des retards de location et de leur impact business  
+- 🚀 **API de prédiction de prix** – estimation du prix journalier d’un véhicule à partir de ses caractéristiques  
 
-The objective is to support operational decision-making and automate pricing using a deployed ML model.
+L’objectif est d’aider à la prise de décision opérationnelle et d’automatiser la stratégie de pricing via un modèle déployé.
 
 ---
 
-## Online Dashboard
+## 📊 Dashboard en ligne
 
-Interactive dashboard built with Streamlit.
+Dashboard interactif développé avec **Streamlit**.
 
-Live version:  
+🔗 **Version en ligne :**  
 https://huggingface.co/spaces/Anabeldg/getaround-delay-dashboard
 
-Features:
+### ✨ Fonctionnalités
 
-- Exploration of rental delay distributions  
-- Analysis of delay thresholds (60 / 120 / 180 minutes)  
-- Business impact reasoning  
-- Interactive visualizations using pandas and Altair  
+- Exploration des distributions de retards  
+- Analyse de différents seuils de retard (60 / 120 / 180 minutes)  
+- Interprétation de l’impact business  
+- Visualisations interactives avec **pandas** et **Altair**
 
 ---
 
-## Pricing Prediction API
+## 🚀 API de prédiction des prix
 
-Production-ready API built with FastAPI and deployed on Hugging Face Spaces.
+API développée avec **FastAPI** et déployée sur **Hugging Face Spaces**.
 
-Live API:  
+🔗 **API en ligne :**  
 https://huggingface.co/spaces/Anabeldg/getaround-pricing-api
 
-### Available Endpoints
+### 📡 Endpoints disponibles
 
-**GET /**  
-Landing page with project information.
+#### `GET /`
+Page d’accueil présentant l’API.
 
-**GET /health**  
-Healthcheck endpoint.
+#### `GET /health`
+Endpoint de vérification de l’état du service.
 
-Example response:
+Exemple de réponse :
 
+```json
 {
   "status": "ok"
 }
+```
 
-**POST /predict**  
-Predict daily rental price.
+#### `POST /predict`
+Prédiction du prix journalier d’un véhicule.
 
-Example request:
+### 📥 Exemple de requête
 
+```json
 {
   "input": [
     {
@@ -74,104 +77,115 @@ Example request:
     }
   ]
 }
+```
 
-Example response:
+### 📤 Exemple de réponse
 
+```json
 {
   "prediction": [62.4]
 }
+```
 
 ---
 
-## Model
+## 🧠 Modèle
 
-- Algorithm: Random Forest Regressor  
-- Preprocessing: ColumnTransformer + OneHotEncoder  
-- Model persistence: joblib  
-- scikit-learn version pinned for reproducibility  
+- Algorithme : **Random Forest Regressor**  
+- Prétraitement : **ColumnTransformer + OneHotEncoder**  
+- Sauvegarde du modèle : `joblib`  
+- Version de `scikit-learn` fixée pour assurer la reproductibilité  
 
 ---
 
-## Project Structure
+## 🏗 Structure du projet
 
+```text
 getaround-project/
-
-dashboard/
-- app.py
-- requirements.txt
-- Dockerfile
-
-pricing_api/
-- main.py
-- pricing_model.joblib
-- requirements.txt
-- Dockerfile
-
-README.md
+│
+├── dashboard/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── pricing_api/
+│   ├── main.py
+│   ├── pricing_model.joblib
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+└── README.md
+```
 
 ---
 
-## Local Setup
+## 💻 Lancement en local
 
-### Clone repository
+### 1️⃣ Cloner le repository
 
-git clone https://github.com/YOUR_USERNAME/getaround-project.git  
+```bash
+git clone https://github.com/madamanastasia/getaround-project.git
 cd getaround-project
+```
 
-### Run the API locally
+### 2️⃣ Lancer l’API localement
 
-cd pricing_api  
-pip install -r requirements.txt  
-uvicorn main:app --reload  
+```bash
+cd pricing_api
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
-API will be available at:  
-http://127.0.0.1:8000  
+API accessible à :  
+http://127.0.0.1:8000
 
-### Run the Dashboard locally
+### 3️⃣ Lancer le dashboard localement
 
-cd dashboard  
-pip install -r requirements.txt  
-streamlit run app.py  
+```bash
+cd dashboard
+pip install -r requirements.txt
+streamlit run app.py
+```
 
-Dashboard will be available at:  
-http://localhost:8501  
-
----
-
-## Deployment
-
-Both components are deployed using Docker on Hugging Face Spaces:
-
-- Dashboard → Streamlit Docker Space  
-- API → FastAPI + Uvicorn Docker Space  
-
-This setup ensures:
-
-- Reproducibility  
-- Version control  
-- Dependency isolation  
-- Production-like environment  
+Dashboard accessible à :  
+http://localhost:8501
 
 ---
 
-## Business Context
+## ⚙️ Déploiement
 
-The project addresses two key business questions:
+Les deux composants sont déployés via **Docker sur Hugging Face Spaces** :
 
-1. What is the optimal delay threshold to minimize operational conflicts?
-2. How can pricing be automated using a machine learning model?
+- 📊 Dashboard → Space Docker Streamlit  
+- 🚀 API → Space Docker FastAPI + Uvicorn  
 
-The final architecture demonstrates:
+Cette architecture garantit :
 
-- Data analysis  
-- Model training  
-- API design  
-- Containerization  
-- Cloud deployment  
+- Reproductibilité  
+- Gestion des dépendances  
+- Isolation de l’environnement  
+- Approche proche d’un contexte de production  
 
 ---
 
-## Author
+## 📈 Contexte métier
 
-Anabel DG  
-Machine Learning & Data Science Project
+Le projet répond à deux problématiques principales :
+
+1. Déterminer un seuil optimal de retard pour minimiser les conflits opérationnels.  
+2. Automatiser la stratégie de pricing à l’aide d’un modèle de machine learning.  
+
+Compétences mobilisées :
+
+- Analyse de données  
+- Modélisation machine learning  
+- Conception d’API  
+- Conteneurisation (Docker)  
+- Déploiement cloud  
+
+---
+
+## 👤 Auteur
+
+**Anastasiia Belosludtseva**  
+Projet Machine Learning & Data Science
