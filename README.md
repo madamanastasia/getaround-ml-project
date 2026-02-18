@@ -1,4 +1,3 @@
-````markdown
 # 🚗 Getaround – Analyse des Retards & API de Pricing
 
 ## 📌 Présentation du projet
@@ -191,8 +190,6 @@ Les deux composants sont déployés via Docker sur Hugging Face Spaces. Cette ar
 ## 📈 Compétences mobilisées
 
 Analyse de données, modélisation Machine Learning, validation de schéma, conception d’API REST, conteneurisation Docker et déploiement cloud.
-````
-
 
 ## 👤 Auteur
 
