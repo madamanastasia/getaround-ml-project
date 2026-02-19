@@ -84,14 +84,16 @@ Contraintes :
 
 #### 📬 Exemple avec curl
 
+```json
 curl -X POST "https://anabeldg-getaround-pricing-api.hf.space/predict" \
 -H "Content-Type: application/json" \
 -d '{"input":[["Citroën",140411,100,"diesel","black","convertible",1,1,0,0,1,1,1]]}'
-
+```
 
 #### 🐍 Exemple avec Python
 
-```import requests
+```json
+import requests
 
 payload = {
   "input": [
@@ -109,7 +111,8 @@ print(response.json())
 
 #### 📤 Format de réponse
 
-```{
+```json
+{
   "prediction": [97.15]
 }
 ```
