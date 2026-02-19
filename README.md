@@ -34,7 +34,10 @@ https://huggingface.co/spaces/Anabeldg/getaround-pricing-api
 
 ## 📡 Documentation de l’API
 
-La configuration FastAPI par défaut est volontairement modifiée : Swagger (/docs) et ReDoc sont désactivés. Une documentation personnalisée est disponible via l’endpoint GET /docs. Cette page décrit explicitement le format attendu, l’ordre strict des features (FEATURE_ORDER) et les contraintes de validation.
+La documentation complète de l’API est disponible ici :
+
+https://huggingface.co/spaces/Anabeldg/getaround-pricing-api/docs
+
 
 ---
 
