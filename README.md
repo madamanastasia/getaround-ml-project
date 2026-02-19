@@ -78,11 +78,36 @@ Format matriciel :
 ```
 
 Contraintes :
-- Chaque ligne doit contenir exactement N features.
+- Chaque ligne doit contenir exactement 13 features.
 - L’ordre doit correspondre strictement à FEATURE_ORDER.
 - Toute erreur de dimension entraîne une réponse HTTP 422.
 
-Ce format est strict et aligné avec une logique de pipeline ML en production.
+📬 Exemple avec curl
+curl -X POST "https://anabeldg-getaround-pricing-api.hf.space/predict" \
+-H "Content-Type: application/json" \
+-d '{"input":[["Citroën",140411,100,"diesel","black","convertible",1,1,0,0,1,1,1]]}'
+
+🐍 Exemple avec Python
+import requests
+
+payload = {
+  "input": [
+    ["Citroën", 140411, 100, "diesel", "black", "convertible", 1, 1, 0, 0, 1, 1, 1]
+  ]
+}
+
+response = requests.post(
+    "https://anabeldg-getaround-pricing-api.hf.space/predict",
+    json=payload
+)
+
+print(response.json())
+
+📤 Format de réponse
+{
+  "prediction": [97.15]
+}
+Une valeur est retournée pour chaque ligne fournie dans "input".
 
 #### Format secondaire (compatibilité)
 
