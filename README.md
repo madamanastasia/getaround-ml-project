@@ -36,7 +36,7 @@ https://huggingface.co/spaces/Anabeldg/getaround-pricing-api
 
 La documentation complète de l’API est disponible ici :
 
-https://huggingface.co/spaces/Anabeldg/getaround-pricing-api/docs
+https://anabeldg-getaround-pricing-api.hf.space/docs
 
 
 ---
