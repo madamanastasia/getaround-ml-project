@@ -84,7 +84,7 @@ Contraintes :
 
 #### 📬 Exemple avec curl
 
-```json
+```bash
 curl -X POST "https://anabeldg-getaround-pricing-api.hf.space/predict" \
 -H "Content-Type: application/json" \
 -d '{"input":[["Citroën",140411,100,"diesel","black","convertible",1,1,0,0,1,1,1]]}'
@@ -92,7 +92,7 @@ curl -X POST "https://anabeldg-getaround-pricing-api.hf.space/predict" \
 
 #### 🐍 Exemple avec Python
 
-```json
+```python
 import requests
 
 payload = {
