@@ -24,7 +24,7 @@ TARGET = "rental_price_per_day"
 
 
 def _clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    # Robustly drop any accidental index columns from CSV exports
+    
     unnamed = [c for c in df.columns if str(c).startswith("Unnamed")]
     if unnamed:
         df = df.drop(columns=unnamed)

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/anabeldg/Documents/jedha/Getaround/mlruns/639680787774732459/3ed090f881984d49bf1d78b1f72159d2/artifacts
+end_time: 1771424048517
+entry_point_name: ''
+experiment_id: '639680787774732459'
+lifecycle_stage: active
+run_id: 3ed090f881984d49bf1d78b1f72159d2
+run_name: rf_baseline
+run_uuid: 3ed090f881984d49bf1d78b1f72159d2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1771424042441
+status: 3
+tags: []
+user_id: anabeldg
