@@ -1,0 +1,272 @@
+```html
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Getaround — Documentation API Pricing</title>
+  <style>
+    :root {
+      --text: #111827;
+      --muted: #4b5563;
+      --border: #e5e7eb;
+      --bg: #ffffff;
+      --codebg: #0b1020;
+      --codefg: #e6edf3;
+      --soft: #f9fafb;
+      --note: #eef6ff;
+      --note-border: #3b82f6;
+      --ok: #065f46;
+      --warn: #92400e;
+      --err: #991b1b;
+    }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      margin: 32px;
+      max-width: 980px;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+    h1 { margin: 0 0 6px 0; font-size: 28px; }
+    .subtitle { margin: 0 0 18px 0; color: var(--muted); }
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin: 14px 0;
+      background: #fff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.95em;
+    }
+    pre {
+      background: var(--codebg);
+      color: var(--codefg);
+      padding: 12px 14px;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    pre code {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      font-size: 13px;
+    }
+    .note {
+      background: var(--note);
+      padding: 12px 14px;
+      border-left: 4px solid var(--note-border);
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    .kv { margin: 8px 0 0 0; padding: 0; list-style: none; }
+    .kv li { margin: 6px 0; }
+    .kv b { display: inline-block; min-width: 130px; }
+    .status { font-weight: 700; }
+    .status.ok { color: var(--ok); }
+    .status.warn { color: var(--warn); }
+    .status.err { color: var(--err); }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    a { color: #1d4ed8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ul { margin: 8px 0 0 18px; }
+  </style>
+</head>
+
+<body>
+  <h1>🚗 Getaround — Documentation de l’API Pricing</h1>
+  <p class="subtitle">
+    Documentation minimale requise, accessible via <code>/docs</code> : description de chaque endpoint (méthode, entrée, sortie, exemples).
+  </p>
+
+  <div class="card">
+    <h2>Vue d’ensemble</h2>
+    <p>Cette API expose un modèle de Machine Learning qui prédit <code>rental_price_per_day</code> en fonction des caractéristiques du véhicule.</p>
+    <ul>
+      <li><code>GET /</code> — Page d’accueil (HTML)</li>
+      <li><code>GET /health</code> — Healthcheck (JSON)</li>
+      <li><code>POST /predict</code> — Prédiction (JSON)</li>
+      <li><code>GET /docs</code> — Documentation (HTML)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><code>GET /</code><span class="pill">HTML</span></h2>
+    <ul class="kv">
+      <li><b>Méthode</b> GET</li>
+      <li><b>Entrée</b> Aucune</li>
+      <li><b>Sortie</b> Page HTML listant les endpoints disponibles</li>
+    </ul>
+    <p><b>Exemple :</b></p>
+    <pre><code>curl -s http://127.0.0.1:8000/</code></pre>
+  </div>
+
+  <div class="card">
+    <h2><code>GET /health</code><span class="pill">JSON</span></h2>
+    <ul class="kv">
+      <li><b>Méthode</b> GET</li>
+      <li><b>Entrée</b> Aucune</li>
+      <li><b>Sortie</b> JSON indiquant l’état du service</li>
+    </ul>
+    <p><b>Exemple :</b></p>
+    <pre><code>curl -s http://127.0.0.1:8000/health</code></pre>
+    <p><b>Réponse attendue :</b></p>
+    <pre><code>{
+  "status": "ok"
+}</code></pre>
+  </div>
+
+  <div class="card">
+    <h2><code>GET /docs</code><span class="pill">HTML</span></h2>
+    <ul class="kv">
+      <li><b>Méthode</b> GET</li>
+      <li><b>Entrée</b> Aucune</li>
+      <li><b>Sortie</b> Page HTML contenant la documentation de l’API</li>
+    </ul>
+    <p><b>Exemple :</b></p>
+    <pre><code>curl -s http://127.0.0.1:8000/docs</code></pre>
+  </div>
+
+  <div class="card">
+    <h2><code>POST /predict</code><span class="pill">JSON</span></h2>
+    <p>Retourne les prédictions de prix journalier (<code>rental_price_per_day</code>) pour une ou plusieurs lignes en entrée.</p>
+
+    <ul class="kv">
+      <li><b>Méthode</b> POST</li>
+      <li><b>Entrée</b> JSON avec une clé <code>input</code></li>
+      <li><b>Sortie</b> JSON <code>{"prediction": [...]}</code> (une prédiction par ligne)</li>
+    </ul>
+
+    <div class="note">
+      <div><b>Formats acceptés :</b></div>
+      <ul>
+        <li><b>Format matrice</b> (requis pour l’évaluation) : <code>{"input": [[...], [...]]}</code></li>
+        <li><b>Format dictionnaires</b> (optionnel / compatibilité) : <code>{"input": [{"feature": value, ...}]}</code></li>
+      </ul>
+    </div>
+
+    <hr>
+
+    <h3>1) Format matrice (requis)</h3>
+    <p class="subtitle" style="margin-top:6px">
+      Chaque ligne doit contenir <b>exactement 13 valeurs</b>, dans l’ordre strict suivant (défini par <code>feature_order.json</code>) :
+    </p>
+    <pre><code>model_key, mileage, engine_power, fuel, paint_color, car_type,
+private_parking_available, has_gps, has_air_conditioning, automatic_car,
+has_getaround_connect, has_speed_regulator, winter_tires</code></pre>
+
+    <div class="note">
+      <b>Types attendus :</b>
+      <ul>
+        <li><b>model_key, fuel, paint_color, car_type</b> → chaînes de caractères</li>
+        <li><b>mileage, engine_power</b> → valeurs numériques</li>
+        <li>Les variables booléennes → <b>true/false</b> ou <b>0/1</b></li>
+      </ul>
+      <div class="status warn">Si une ligne n’a pas 13 valeurs, l’API renvoie une erreur 422.</div>
+    </div>
+
+    <p><b>Exemple de requête (matrice) :</b></p>
+    <pre><code>{
+  "input": [
+    ["Citroën", 140411, 100, "diesel", "black", "convertible", 1, 1, 0, 0, 1, 1, 1]
+  ]
+}</code></pre>
+
+    <div class="grid">
+      <div class="card">
+        <h4>curl</h4>
+        <pre><code>curl -X POST "http://127.0.0.1:8000/predict" \
+-H "Content-Type: application/json" \
+-d '{"input":[["Citroën",140411,100,"diesel","black","convertible",1,1,0,0,1,1,1]]}'</code></pre>
+      </div>
+      <div class="card">
+        <h4>Python</h4>
+        <pre><code>import requests
+
+payload = {
+  "input": [
+    ["Citroën", 140411, 100, "diesel", "black", "convertible", 1, 1, 0, 0, 1, 1, 1]
+  ]
+}
+
+r = requests.post("http://127.0.0.1:8000/predict", json=payload)
+print(r.json())</code></pre>
+      </div>
+    </div>
+
+    <hr>
+
+    <h3>2) Format dictionnaires (compatibilité)</h3>
+    <p>Ce format est accepté pour des raisons de compatibilité. Toutes les colonnes attendues doivent être présentes ; l’API réordonne ensuite selon <code>FEATURE_ORDER</code>.</p>
+    <p><b>Exemple de requête (dictionnaires) :</b></p>
+    <pre><code>{
+  "input": [
+    {
+      "model_key": "Citroën",
+      "mileage": 140411,
+      "engine_power": 100,
+      "fuel": "diesel",
+      "paint_color": "black",
+      "car_type": "convertible",
+      "private_parking_available": true,
+      "has_gps": true,
+      "has_air_conditioning": false,
+      "automatic_car": false,
+      "has_getaround_connect": true,
+      "has_speed_regulator": true,
+      "winter_tires": true
+    }
+  ]
+}</code></pre>
+
+    <hr>
+
+    <h3>Réponse</h3>
+    <p>Une prédiction par ligne.</p>
+    <pre><code>{
+  "prediction": [97.15]
+}</code></pre>
+
+    <h3>Erreurs possibles</h3>
+    <ul>
+      <li><code>422</code> — entrée invalide (mauvaise dimension de matrice, colonnes manquantes en mode dictionnaire, JSON invalide)</li>
+      <li><code>500</code> — erreur interne lors de la prédiction (échec du modèle)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Notes</h2>
+    <ul>
+      <li>L’API supporte des prédictions en batch (plusieurs lignes dans <code>input</code>).</li>
+      <li>Les catégories inconnues peuvent être gérées par le pipeline du modèle (selon l’entraînement).</li>
+      <li>Pour éviter les erreurs 422, respecter strictement l’ordre et le nombre de features en mode matrice.</li>
+    </ul>
+  </div>
+</body>
+</html>
+```
