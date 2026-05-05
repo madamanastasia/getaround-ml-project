@@ -107,34 +107,6 @@ Interface interactive développée avec **Streamlit**. L'utilisateur saisit les 
 
 ---
 
-## 🏗 Structure du projet
-
-getaround-ml-project/
-│
-├── dashboard/
-│   ├── app.py
-│   ├── get_around_delay_analysis.csv
-│   ├── get_around_pricing_project.csv
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── pricing_api/
-│   ├── main.py
-│   ├── pricing_model.joblib
-│   ├── feature_order.json
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── pricing_app/
-│   ├── app.py
-│   ├── requirements.txt
-│   └── README.md
-│
-├── train_model.py
-└── README.md
-
----
-
 ## 💻 Lancement en local
 
 ### API FastAPI
