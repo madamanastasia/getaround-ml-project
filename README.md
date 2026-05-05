@@ -76,7 +76,7 @@ response = requests.post(
     json=payload
 )
 print(response.json())
-# {"prediction": [96.4]}
+# {'prediction': [88.75]}
 ```
 
 ---
