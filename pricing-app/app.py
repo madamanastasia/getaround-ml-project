@@ -1,11 +1,7 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import requests
 from pathlib import Path
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.pipeline import Pipeline
 
 st.set_page_config(
     page_title="Getaround — Estimation du prix",
@@ -45,45 +41,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-APP_DIR = Path(__file__).resolve().parent
-PRICING_PATH = APP_DIR / "get_around_pricing_project.csv"
+API_URL = "https://anabeldg-getaround-pricing-api.hf.space/predict"
 
-
-@st.cache_data
-def load_pricing():
-    dfp = pd.read_csv(PRICING_PATH)
-    dfp = dfp.loc[:, ~dfp.columns.str.match(r"^Unnamed")]
-    return dfp
-
-
-@st.cache_resource
-def train_model(df):
-    TARGET = "rental_price_per_day"
-    df = df.dropna()
-    X = df.drop(columns=[TARGET])
-    y = df[TARGET]
-
-    cat_cols = ["model_key", "fuel", "paint_color", "car_type"]
-    num_cols = [c for c in X.columns if c not in cat_cols]
-
-    preprocess = ColumnTransformer([
-        ("cat", OneHotEncoder(handle_unknown="ignore"), cat_cols),
-        ("num", "passthrough", num_cols),
-    ])
-
-    model = RandomForestRegressor(
-        n_estimators=400,
-        random_state=42,
-        n_jobs=-1,
-        min_samples_leaf=2
-    )
-    pipe = Pipeline([("preprocess", preprocess), ("model", model)])
-    pipe.fit(X, y)
-    return pipe
-
-
-pricing_df = load_pricing()
-pipe = train_model(pricing_df)
+FEATURE_ORDER = [
+    "model_key", "mileage", "engine_power", "fuel",
+    "paint_color", "car_type", "private_parking_available",
+    "has_gps", "has_air_conditioning", "automatic_car",
+    "has_getaround_connect", "has_speed_regulator", "winter_tires"
+]
 
 st.markdown('<div class="main-title">🚗 Getaround — Estimation du prix</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Renseignez les caractéristiques du véhicule pour obtenir une estimation du prix journalier.</div>', unsafe_allow_html=True)
@@ -124,39 +89,43 @@ st.divider()
 
 if st.button("💶 Estimer le prix journalier", type="primary", use_container_width=True):
 
-    input_data = pd.DataFrame([{
-        "model_key": model_key,
-        "mileage": mileage,
-        "engine_power": engine_power,
-        "fuel": fuel,
-        "paint_color": paint_color,
-        "car_type": car_type,
-        "private_parking_available": int(private_parking_available),
-        "has_gps": int(has_gps),
-        "has_air_conditioning": int(has_air_conditioning),
-        "automatic_car": int(automatic_car),
-        "has_getaround_connect": int(has_getaround_connect),
-        "has_speed_regulator": int(has_speed_regulator),
-        "winter_tires": int(winter_tires),
-    }])
+    input_row = [
+        model_key,
+        mileage,
+        engine_power,
+        fuel,
+        paint_color,
+        car_type,
+        int(private_parking_available),
+        int(has_gps),
+        int(has_air_conditioning),
+        int(automatic_car),
+        int(has_getaround_connect),
+        int(has_speed_regulator),
+        int(winter_tires),
+    ]
 
-    predicted_price = pipe.predict(input_data)[0]
+    payload = {"input": [input_row]}
 
-    st.markdown(f"""
-    <div class="result-box">
-        <div class="result-label">Prix journalier estimé</div>
-        <div class="result-price">{predicted_price:.0f} €</div>
-        <div class="result-label">par jour</div>
-    </div>
-    """, unsafe_allow_html=True)
+    try:
+        response = requests.post(API_URL, json=payload, timeout=30)
+        response.raise_for_status()
+        predicted_price = response.json()["prediction"][0]
 
-    st.markdown("")
+        st.markdown(f"""
+        <div class="result-box">
+            <div class="result-label">Prix journalier estimé</div>
+            <div class="result-price">{predicted_price:.0f} €</div>
+            <div class="result-label">par jour</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    med = float(pricing_df["rental_price_per_day"].median())
-    diff = predicted_price - med
-    if diff > 0:
-        st.info(f"📈 Ce prix est **{diff:.0f} €** au-dessus du prix médian du marché ({med:.0f} €/jour).")
-    else:
-        st.info(f"📉 Ce prix est **{abs(diff):.0f} €** en-dessous du prix médian du marché ({med:.0f} €/jour).")
+        st.markdown("")
+        st.caption("Estimation via API FastAPI · Modèle Random Forest (R²=0.73, MAE=10.8€) · 4 843 véhicules Getaround.")
 
-    st.caption("Estimation basée sur un modèle Random Forest (R²=0.73, MAE=10.8€) entraîné sur 4 843 véhicules Getaround.")
+    except requests.exceptions.Timeout:
+        st.error("⏱️ L'API met trop de temps à répondre. Réessayez dans quelques secondes.")
+    except requests.exceptions.ConnectionError:
+        st.error("🔌 Impossible de contacter l'API. Vérifiez que le Space FastAPI est actif.")
+    except Exception as e:
+        st.error(f"❌ Erreur : {e}")

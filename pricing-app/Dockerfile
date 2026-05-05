@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+COPY app.py .
+COPY get_around_delay_analysis.csv .
+COPY get_around_pricing_project.csv .
+
+RUN pip install -r requirements.txt
+
+EXPOSE 7860
+
+HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health
+
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
